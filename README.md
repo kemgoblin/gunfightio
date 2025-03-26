@@ -33,3 +33,4 @@ This repo contains:
    git clone https://github.com/Ultramine3000/Gunfight.io
    cd Gunfight.io
 
+2. Open the project within the [Godot Engine] (https://godotengine.org/)
