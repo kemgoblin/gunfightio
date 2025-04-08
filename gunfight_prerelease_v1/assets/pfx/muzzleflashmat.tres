@@ -1,0 +1,20 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dfs2unr6dcjnv"]
+
+[ext_resource type="Texture2D" uid="uid://dk0pxwxi60mpl" path="res://addons/MrMinimal'sVFX/addons/kenney-particles/textures/fire_01.png" id="1_yums3"]
+
+[resource]
+transparency = 1
+blend_mode = 1
+shading_mode = 2
+diffuse_mode = 3
+specular_mode = 2
+disable_ambient_light = true
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_yums3")
+emission_enabled = true
+emission = Color(1, 0.538, 0.16, 1)
+emission_energy_multiplier = 5.0
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false

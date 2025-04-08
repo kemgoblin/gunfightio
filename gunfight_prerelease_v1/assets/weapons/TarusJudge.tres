@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=8 format=3 uid="uid://b1un2a15q5vl7"]
+
+[ext_resource type="Texture2D" uid="uid://cfxfimly35oou" path="res://assets/textures/bullet_icons/tarusjudge_bullet.png" id="1_6nwrn"]
+[ext_resource type="PackedScene" uid="uid://0hfsyvu2gt01" path="res://assets/bullets/bullet_ray_large.tscn" id="1_6pb4s"]
+[ext_resource type="Script" uid="uid://cwceyqimjut8o" path="res://scripts/class-weapon.gd" id="1_hodff"]
+[ext_resource type="AudioStream" uid="uid://cq81s5duedw2p" path="res://assets/sfx/weapons/tarusjudge/revolver_draw.wav" id="3_5mqkx"]
+[ext_resource type="AudioStream" uid="uid://xyanq67n6fed" path="res://assets/sfx/weapons/tarusjudge/revolver_shot.wav" id="3_vbspc"]
+[ext_resource type="AudioStream" uid="uid://cho0gmuxm8xrk" path="res://assets/sfx/weapons/tarusjudge/revolver_reload.wav" id="4_deq2g"]
+[ext_resource type="AudioStream" uid="uid://b3pqla47uwafr" path="res://assets/sfx/weapons/tarusjudge/revovler_holster.wav" id="5_eayyt"]
+
+[resource]
+script = ExtResource("1_hodff")
+name = "TarusJudge"
+weapon_type = 0
+bullet_tscn = ExtResource("1_6pb4s")
+ammo_icon = ExtResource("1_6nwrn")
+cooldown = 1.0
+reload_time = 3.3
+max_ammo = 6
+recoil_strength = Vector2(0.45, 0.25)
+recoil_recovery_speed = 7.0
+fire_sound = ExtResource("3_vbspc")
+reload_sound = ExtResource("4_deq2g")
+draw_sound = ExtResource("3_5mqkx")
+holster_sound = ExtResource("5_eayyt")
