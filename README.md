@@ -2,7 +2,7 @@
 
 Welcome to the official repository for **Gunfight.io** — an open source FPS game built with Godot.
 
-This project is licensed under the **GPLv3** license to protect against unauthorized resale or closed-source redistribution.
+This project is licensed under the **GPLv3** license, which guarantees users the freedom to run, study, modify, and share software while ensuring all distributed versions remain open and under the same license.
 
 ---
 
