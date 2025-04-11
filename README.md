@@ -46,7 +46,7 @@ Project Lead
 
 # Programming & Design Contributors
 - Michelle Lehto – Programmer (https://www.michellelehto-gamedesign.com/)
-- Richasey Sok – Aniamtor (https://www.artstation.com/richmemes/profile)
+- Richasey Sok – Animator (https://www.artstation.com/richmemes/profile)
 
 # Assets
 
