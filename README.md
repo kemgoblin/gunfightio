@@ -44,11 +44,11 @@ Gunfight.io is a collaborative project developed with the support of an open-sou
 Project Lead
 - Jake Woods – Project founder, lead developer, game designer
 
-# Programming & Design Contributors
+Programming & Design Contributors
 - Michelle Lehto – Programmer (https://www.michellelehto-gamedesign.com/)
 - Richasey Sok – Animator (https://www.artstation.com/richmemes/profile)
 
-# Assets
+Assets
 
 - AK74 – (https://sketchfab.com/3d-models/low-poly-aks-74-f2954db658a24c6eaced03e7f33e3bd3)
 - Tarus Judge – (https://sketchfab.com/3d-models/low-poly-taurus-raging-bull-454-casull-599549ef512e4eb29824429d574f1a17)
