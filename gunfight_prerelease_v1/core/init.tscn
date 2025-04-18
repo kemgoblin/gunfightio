@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bljkplcgy1ue1"]
-
-[ext_resource type="Script" uid="uid://pkbxue3s6xu1" path="res://scripts/_init.gd" id="1_7882r"]
-
-[node name="init" type="Node"]
-script = ExtResource("1_7882r")
-map_name = "dev_map_02"
-player_count = 2
