@@ -616,6 +616,7 @@ func shoot():
 	shoot_cooldown = current_weapon.cooldown
 	current_weapon.current_ammo -= 1
 	hud.update_ammo()
+	hud.flash_shoot_indicator()  # <- Simple flash!
 
 
 func move_tracer(hit_position: Vector3):

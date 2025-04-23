@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Gunfight.io"
+config/name="Gunfight.io 0.1.1"
 run/main_scene="uid://bljkplcgy1ue1"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"

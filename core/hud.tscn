@@ -1,12 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://ucqk0dfof7w1"]
+[gd_scene load_steps=14 format=3 uid="uid://ucqk0dfof7w1"]
 
 [ext_resource type="Texture2D" uid="uid://dvv4253o8mga7" path="res://assets/textures/ui/crosshair.png" id="1_5j50p"]
-[ext_resource type="Script" uid="uid://cx2waf81771er" path="res://core/_hud.gd" id="1_wp0j3"]
+[ext_resource type="Script" uid="uid://cx2waf81771er" path="res://scripts/_hud.gd" id="1_wp0j3"]
 [ext_resource type="Texture2D" uid="uid://d15tlq33gen8i" path="res://assets/textures/ui/health_icon.png" id="3_kkv7h"]
 [ext_resource type="Texture2D" uid="uid://drj53crcwcvq3" path="res://assets/textures/ui/blood_overlay.png" id="4_whbmk"]
 [ext_resource type="Texture2D" uid="uid://4jb3av6g8r1y" path="res://assets/textures/ui/victory.webp" id="5_qqf8p"]
 [ext_resource type="Texture2D" uid="uid://dcw54ph03stcp" path="res://assets/textures/ui/defeat.png" id="6_eclha"]
 [ext_resource type="AudioStream" uid="uid://p13voft6ohx5" path="res://assets/sfx/ui/have_mercy.mp3" id="7_eclha"]
+[ext_resource type="Texture2D" uid="uid://ggsmtdl0lfq1" path="res://assets/textures/ui/vignette.png" id="8_vjwwo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bw7k3"]
 bg_color = Color(0, 0, 0, 0)
@@ -165,6 +166,13 @@ layout_mode = 0
 offset_right = 1600.0
 offset_bottom = 450.0
 texture = ExtResource("4_whbmk")
+expand_mode = 1
+
+[node name="shoot_indicator" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1600.0
+offset_bottom = 450.0
+texture = ExtResource("8_vjwwo")
 expand_mode = 1
 
 [node name="player_label" type="Label" parent="."]

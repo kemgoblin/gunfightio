@@ -140,6 +140,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="obsidian_mall" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(960, 539)
 texture = ExtResource("1_h6f4g")
 

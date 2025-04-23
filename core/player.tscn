@@ -12016,7 +12016,6 @@ stamina_regen_rate = 1
 stamina_drain_rate = 1
 jump_force = 12.0
 tracer_scene = ExtResource("2_p73st")
-max_health = 120
 current_weapon = ExtResource("2_jvpc5")
 side_weapon = ExtResource("3_s0dwd")
 ammo_default_multiplier = 8
@@ -12057,7 +12056,7 @@ libraries = {
 
 [node name="walk_sound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_2dpcx")
-volume_db = 19.296
+volume_db = 16.0
 
 [node name="shoot_sound" type="AudioStreamPlayer" parent="."]
 volume_db = -2.249
