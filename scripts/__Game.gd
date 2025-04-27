@@ -1,5 +1,7 @@
 extends Node
 
+signal game_starting
+
 ## NODES ##
 @onready var player_tscn := preload("res://core/player.tscn")
 @onready var player_roster := [] 
@@ -8,7 +10,9 @@ extends Node
 @onready var load_screen_tscn := preload("res://core/load_screen.tscn")
 
 
+@rpc("authority", "call_local", "reliable")
 func start_match(map:String, player_count:int, points_to_win:=10):
+	game_starting.emit()
 	player_roster = []
 	for index in range(0, player_count):
 		var player = player_tscn.instantiate()
