@@ -21,6 +21,8 @@ Game="*res://scripts/__Game.gd"
 System="*res://scripts/__System.gd"
 AudioManager="*res://scripts/__AudioManager.gd"
 PFXManager="*res://scripts/__PFXManager.gd"
+Multiplayer="*res://scripts/__Multiplayer.gd"
+Matchmaking="*res://scripts/__Matchmaking.gd"
 
 [display]
 
