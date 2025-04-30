@@ -87,6 +87,7 @@ var reloading: bool = false  # Tracks whether the player is reloading
 @export_range(0, 1000) var max_health := 100
 var health : int
 var current_score := 0
+var dead: bool
 
 ## INVENTORY ##
 @export_category("Inventory")
@@ -116,6 +117,9 @@ var animation_blends = {
 
 
 func _ready() -> void:
+	if multiplayer.multiplayer_peer is not OfflineMultiplayerPeer:
+		set_multiplayer_authority(Multiplayer.player_ids[ctrl_port])
+	
 	view_layer = ctrl_port + 2
 	
 		# Set player name in HUD
@@ -150,22 +154,21 @@ func _ready() -> void:
 	body_anim_oneshot.animation_finished.connect(_on_death_anim_done.bind(1))
 
 func _physics_process(delta: float) -> void:
-	_control_process()
-	_camera_process(delta)
+	if is_multiplayer_authority():
+		_control_process()
+		_camera_process(delta)
+		_movement_process(delta)
+		_sprint_process(delta)
+	
 	_ads_process(delta)
-	_movement_process(delta)
-	_sprint_process(delta)
-	
-	
 	_anim_arms_process()
 	_anim_body_process(ctrl_port)
-	
-
 	
 	if shoot_cooldown > 0.0: shoot_cooldown -= delta
 	if reload_time_remaining > 0.0: reload_time_remaining -= delta
 	
 	_handle_walk_sound()  # Call the walk sound handler
+
 
 func _control_process():
 	if health <= 0: return
@@ -175,18 +178,18 @@ func _control_process():
 		jump()
 	
 	if Input.is_action_just_pressed("p"+str(ctrl_port)+"_ads"):
-		set_ads(true)
+		set_ads.rpc(true)
 	if Input.is_action_just_released("p"+str(ctrl_port)+"_ads"):
-		set_ads(false)
+		set_ads.rpc(false)
 	
 	if Input.is_action_just_pressed("p"+str(ctrl_port)+"_switch_weapon"):
-		switch_weapon()
+		switch_weapon.rpc()
 	
 	if Input.is_action_pressed("p"+str(ctrl_port)+"_shoot"):
-		shoot()
+		shoot.rpc()
 	
 	if Input.is_action_just_pressed("p"+str(ctrl_port)+"_reload"):
-		reload()
+		reload.rpc()
 
 func _camera_process(delta):
 	if health <= 0:
@@ -436,7 +439,7 @@ func jump():
 	jump_queued = true
 
 
-
+@rpc("authority", "call_local", "reliable")
 func switch_weapon(update_only: bool = false) -> void:
 	if not update_only:
 		# Play holster sound from the current weapon, if the node and sound are valid.
@@ -511,7 +514,7 @@ func switch_weapon(update_only: bool = false) -> void:
 
 
 
-
+@rpc("authority", "call_local", "reliable")
 func reload():
 	if shoot_cooldown > 0.0: 
 		return
@@ -574,6 +577,7 @@ func _on_reload_finished(anim_name: StringName):
 		# Get reference to the AnimationPlayer
 		var continue_player: AnimationPlayer = current_arm_rig.get_node("anim_continue")
 
+@rpc("authority", "call_local", "reliable")
 func shoot():
 	if shoot_cooldown > 0.0:
 		return
@@ -656,9 +660,14 @@ func move_tracer(hit_position: Vector3):
 func melee():
 	pass
 
-func take_damage(damage: int, type: String, enemy_source, hit_position: Vector3):
+@rpc("any_peer", "call_local", "reliable")
+func take_damage(damage: int, type: String, enemy_source_path: NodePath, hit_position: Vector3):
 	if health <= 0:
 		return  # Prevent taking further damage if already dead
+	
+	var enemy_source := get_node(enemy_source_path)
+	if enemy_source.get_multiplayer_authority() != multiplayer.get_remote_sender_id():
+		return
 
 	health -= damage
 	hud.hp_target = health
@@ -678,13 +687,13 @@ func take_damage(damage: int, type: String, enemy_source, hit_position: Vector3)
 	var hit_indicator_scene = preload("res://assets/pfx/bloodspatter/blood_spatter.tscn")
 	var hit_indicator = hit_indicator_scene.instantiate()
 	get_parent().add_child(hit_indicator)
-
+	
 	var direction_to_enemy = (enemy_source.global_position - hit_position).normalized()
 	hit_indicator.global_position = hit_position
 	hit_indicator.look_at(hit_position + direction_to_enemy, Vector3.UP)
 
 	if health <= 0:
-		die(0, enemy_source)
+		die.rpc(0, enemy_source_path)
 
 	match type:
 		"head":
@@ -715,9 +724,14 @@ func _camera_flinch():
 	tween.tween_property(camera, "rotation:y", camera.rotation.y - flinch_y, 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
-func die(_func_stage:=0, enemy_source:Player=null):
+@rpc("any_peer", "call_local", "reliable")
+func die(_func_stage := 0, enemy_source_path := ""):
 	match _func_stage:
 		0:
+			if dead:
+				return
+			dead = true
+			
 			# Play death animation
 			var anim_name = ""
 			match current_weapon.weapon_type:
@@ -730,6 +744,7 @@ func die(_func_stage:=0, enemy_source:Player=null):
 			collision_layer = 0  # Player is removed from all collision layers (cannot be hit)
 			collision_mask = 2   # Player still collides with terrain (Layer 2) ONLY
 			
+			var enemy_source := get_node(enemy_source_path)
 			if enemy_source is Player: 
 				enemy_source.score_point(1)
 			
@@ -744,6 +759,7 @@ func die(_func_stage:=0, enemy_source:Player=null):
 			health = max_health
 			hud.hp_target = max_health
 			Game.world.respawn(self)
+			dead = false
 
 			# Reset collision to original values after respawn
 			collision_layer = 1  # Player layer
@@ -781,6 +797,7 @@ var ads_triggered_time := 0.0
 var ads_release_requested := false
 const ADS_MIN_DURATION := 0.45
 
+@rpc("authority", "call_local", "reliable")
 func set_ads(is_aiming: bool):
 	if is_aiming:
 		# Enter ADS

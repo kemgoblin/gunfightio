@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=4 uid="uid://ca5t4kb0exg4c"]
+[gd_scene load_steps=76 format=4 uid="uid://ca5t4kb0exg4c"]
 
 [ext_resource type="Script" uid="uid://dp3fracdhc7rq" path="res://scripts/_player.gd" id="1_5hy7b"]
 [ext_resource type="Resource" uid="uid://bx42dgst4c4fy" path="res://assets/weapons/AKS74.tres" id="2_jvpc5"]
@@ -11997,6 +11997,20 @@ _data = {
 &"RifleSprint": SubResource("Animation_ydwiu")
 }
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_s55bn"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("camera:rotation:x")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:rotation:y")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:sprinting")
+properties/3/spawn = false
+properties/3/replication_mode = 2
+
 [node name="player" type="CharacterBody3D" groups=["players"]]
 collision_mask = 6
 script = ExtResource("1_5hy7b")
@@ -12611,12 +12625,11 @@ bone_idx = 34
 transform = Transform3D(440.266, 0, 0, 0, 440.266, 0, 0, 0, 440.266, -1.95517e-13, 76.2905, 0)
 
 [node name="omni_light" type="OmniLight3D" parent="body/body_rig/Armature/Skeleton3D/muzzle_flash/muzzle_flash"]
-transform = Transform3D(-3.19497e-09, -0.0730927, 8.88178e-16, 0.0730927, -3.19497e-09, 3.76537e-22, -3.70577e-22, 8.88178e-16, 0.0730927, -1.38456e-09, 0.0176592, -2.85906e-09)
+transform = Transform3D(-9.31323e-09, -0.201005, -1.42172e-08, 0.201005, -1.95578e-08, 1.11759e-08, 4.65661e-10, 6.94126e-09, 0.201005, 0.0173226, -0.00770403, 0.00411948)
 visible = false
-light_color = Color(1, 0.65, 0, 1)
-light_energy = 0.0
-shadow_enabled = true
-omni_range = 0.292
+light_color = Color(1, 0.647059, 0, 1)
+light_energy = 0.5
+omni_range = 1.013
 
 [node name="emitter" type="GPUParticles3D" parent="body/body_rig/Armature/Skeleton3D/muzzle_flash/muzzle_flash"]
 transform = Transform3D(0.0373982, 0.197468, -0.0032508, -0.0065173, -0.00207281, -0.200888, -0.197387, 0.0374819, 0.00601699, 0.0214599, -0.0717139, 0.00751108)
@@ -12670,3 +12683,8 @@ libraries = {
 
 [node name="spine" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.033
+delta_interval = 0.033
+replication_config = SubResource("SceneReplicationConfig_s55bn")
