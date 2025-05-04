@@ -12625,12 +12625,11 @@ bone_idx = 34
 transform = Transform3D(440.266, 0, 0, 0, 440.266, 0, 0, 0, 440.266, -1.95517e-13, 76.2905, 0)
 
 [node name="omni_light" type="OmniLight3D" parent="body/body_rig/Armature/Skeleton3D/muzzle_flash/muzzle_flash"]
-transform = Transform3D(-3.19497e-09, -0.0730927, 8.88178e-16, 0.0730927, -3.19497e-09, 3.76537e-22, -3.70577e-22, 8.88178e-16, 0.0730927, -1.38456e-09, 0.0176592, -2.85906e-09)
+transform = Transform3D(-9.31323e-09, -0.201005, -1.42172e-08, 0.201005, -1.95578e-08, 1.11759e-08, 4.65661e-10, 6.94126e-09, 0.201005, 0.0173226, -0.00770403, 0.00411948)
 visible = false
-light_color = Color(1, 0.65, 0, 1)
-light_energy = 0.0
-shadow_enabled = true
-omni_range = 0.292
+light_color = Color(1, 0.647059, 0, 1)
+light_energy = 0.5
+omni_range = 1.013
 
 [node name="emitter" type="GPUParticles3D" parent="body/body_rig/Armature/Skeleton3D/muzzle_flash/muzzle_flash"]
 transform = Transform3D(0.0373982, 0.197468, -0.0032508, -0.0065173, -0.00207281, -0.200888, -0.197387, 0.0374819, 0.00601699, 0.0214599, -0.0717139, 0.00751108)
