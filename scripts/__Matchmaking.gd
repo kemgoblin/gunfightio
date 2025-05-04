@@ -50,6 +50,14 @@ func masterserver_on_peer_connected(id: int) -> void:
 
 @rpc("any_peer", "call_remote", "reliable")
 func create_lobby_request() -> void:
+	# cleanup lobby list
+	var remove_keys: Array[int]
+	for pid in lobbies:
+		if not OS.is_process_running(pid):
+			remove_keys.append(pid)
+	for key in remove_keys:
+		lobbies.erase(key)
+	
 	# find available port
 	var port := Multiplayer.MASTERSERVER_PORT + 1
 	var port_available: bool
