@@ -40,6 +40,11 @@ var view_layer : int
 @export_range(0.0, 16.0) var camera_sensitivity := 0.0
 @export_range(0.0, 1.0) var ads_sensitivity_multiplier := 0.35  # Adjust ADS sensitivity
 
+var look_input := Vector2.ZERO
+var target_look_input := Vector2.ZERO
+@export_range(0.0, 20.0) var look_smoothness := 10.0
+
+
 ## ADS ##
 @export_category("ADS")
 @export_range(0.0, 150.0) var ads_fov_min := 45.0
@@ -152,6 +157,9 @@ func _ready() -> void:
 	hud.update_score()
 	ads_fov_target = 0.0 + camera.fov
 	body_anim_oneshot.animation_finished.connect(_on_death_anim_done.bind(1))
+	
+	if ctrl_port == 0:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():
@@ -195,25 +203,35 @@ func _camera_process(delta):
 	if health <= 0:
 		return
 
-	# Apply reduced sensitivity when ADS is active
 	var sensitivity = camera_sensitivity
 	if ads_mode:
 		sensitivity *= ads_sensitivity_multiplier
 
-	# Get controller input
-	var x_rot = Input.get_axis("p"+str(ctrl_port)+"_cam_lf", "p"+str(ctrl_port)+"_cam_rt")
-	var y_rot = Input.get_axis("p"+str(ctrl_port)+"_cam_dn", "p"+str(ctrl_port)+"_cam_up")
+	# Capture mouse or stick input
+	if ctrl_port == 0:
+		var mouse_motion = Input.get_last_mouse_velocity()
+		target_look_input = Vector2(-mouse_motion.x, -mouse_motion.y) * sensitivity * 0.001
+	else:
+		target_look_input = Vector2(
+			Input.get_axis("p"+str(ctrl_port)+"_cam_lf", "p"+str(ctrl_port)+"_cam_rt"),
+			Input.get_axis("p"+str(ctrl_port)+"_cam_dn", "p"+str(ctrl_port)+"_cam_up")
+		) * sensitivity
 
-	# Apply player camera movement + recoil
-	rotate_y(deg_to_rad(-x_rot * sensitivity) + deg_to_rad(recoil_offset.x))
-	camera.rotate_x(deg_to_rad(y_rot * sensitivity) + deg_to_rad(recoil_offset.y))
+	# Smooth the input to prevent clunky jumpiness
+	look_input = lerp(look_input, target_look_input, clamp(look_smoothness * delta, 0.0, 1.0))
 
-	# **Smoothly recover recoil based on the weapon's recoil recovery speed**
+	# Apply rotation + recoil
+	rotate_y(deg_to_rad(look_input.x + recoil_offset.x))
+	camera.rotate_x(deg_to_rad(look_input.y + recoil_offset.y))
+
+	# Recoil reset
 	if current_weapon:
 		recoil_offset = lerp(recoil_offset, Vector2.ZERO, delta * current_weapon.recoil_recovery_speed)
 
-	# Clamp vertical tilt to avoid extreme angles
+	# Clamp vertical look
 	camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-40), deg_to_rad(60))
+
+
 
 
 func _ads_process(delta):

@@ -12017,6 +12017,7 @@ script = ExtResource("1_5hy7b")
 bob_speed = 7.0
 bob_amount = 0.001
 camera_sensitivity = 1.5
+look_smoothness = 20.0
 ads_fov_min = 20.0
 ads_fov_max = 35.0
 ads_fov_rate = 0.5
