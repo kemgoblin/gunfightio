@@ -244,6 +244,7 @@ shadow_mesh = SubResource("ArrayMesh_yxkva")
 size = Vector3(1.30763, 0.864587, 2.85522)
 
 [node name="Apache" type="RigidBody3D"]
+editor_description = "Spawn or place near targets and the vehicle will search for and kill players"
 collision_layer = 255
 collision_mask = 255
 script = ExtResource("1_dc0ek")
@@ -292,3 +293,7 @@ stream = ExtResource("3_uhpua")
 volume_db = 60.0
 autoplay = true
 parameters/looping = true
+
+[node name="TargetUpdateTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true

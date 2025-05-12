@@ -99,28 +99,10 @@ script = ExtResource("1_skyrd")
 [node name="spawns" type="Node3D" parent="."]
 
 [node name="0" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-5.55135e-08, 0, -1.27, 0, 1.27, 0, 1.27, 0, -5.55135e-08, -30.769, 3.178, 0)
+transform = Transform3D(-5.55135e-08, 0, -1.27, 0, 1.27, 0, 1.27, 0, -5.55135e-08, -16.4024, 3.178, 0)
 
 [node name="1" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-5.55135e-08, 0, 1.27, 0, 1.27, 0, -1.27, 0, -5.55135e-08, 30, 2, 0)
-
-[node name="4" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-1.09985, 0, -0.635, 0, 1.27, 0, 0.635, 0, -1.09985, -2.91699, 9, -9)
-
-[node name="5" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-1.27, 0, -1.91765e-07, 0, 1.27, 0, 1.91765e-07, 0, -1.27, -28.2487, 9, 7.73205)
-
-[node name="6" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-5.55135e-08, 0, -1.27, 0, 1.27, 0, 1.27, 0, -5.55135e-08, -30.769, 3.178, 6)
-
-[node name="7" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-5.55135e-08, 0, 1.27, 0, 1.27, 0, -1.27, 0, -5.55135e-08, 30, 2, 6)
-
-[node name="8" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-5.55135e-08, 0, -1.27, 0, 1.27, 0, 1.27, 0, -5.55135e-08, -30.769, 3.178, -6)
-
-[node name="9" parent="spawns" instance=ExtResource("3_67016")]
-transform = Transform3D(-5.55135e-08, 0, 1.27, 0, 1.27, 0, -1.27, 0, -5.55135e-08, 30, 2, -6)
+transform = Transform3D(-5.55135e-08, 0, 1.27, 0, 1.27, 0, -1.27, 0, -5.55135e-08, 13, 2, 0)
 
 [node name="lights" type="Node3D" parent="."]
 
@@ -221,5 +203,5 @@ mesh = SubResource("CylinderMesh_6ck7l")
 skeleton = NodePath("")
 
 [node name="Apache" parent="." instance=ExtResource("5_6w4i4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.32487, 24.9243, 161.944)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.67513, 67.9243, 444.067)
 max_tilt_angle = -0.2

@@ -3,9 +3,10 @@ extends RigidBody3D
 @onready var mesh_rotor: Node3D = $rotor
 @onready var mesh_tail: Node3D = $tail
 @onready var turret: Node3D = $turret
+@onready var target_update_timer: Timer = $TargetUpdateTimer
 
 @export var rotor_spin_speed = 1000.0
-@export var tail_spin_speed = -1000.0
+@export var tail_spin_speed = -1500.0
 @export var forward_accel = 55.0
 @export var lift_force = 14.0
 @export var max_speed = 75.0
@@ -28,6 +29,10 @@ extends RigidBody3D
 @export var height_variation = 10.0
 @export var wiggle_amplitude = 2.5
 @export var wiggle_speed = 3.0
+
+var patrol_radius = 250.0
+var patrol_angle = 0.0
+var patrol_center = Vector3.ZERO
 
 var rotor_angle = 0.0
 var tail_angle = 0.0
@@ -54,10 +59,12 @@ var turn_left_next = true  # Alternate strafes
 func _ready():
 	rotor_base_rot = mesh_rotor.rotation
 	tail_base_rot = mesh_tail.rotation
-	center_of_mass = Vector3(0, -0.25, -2.0)
 	sleeping = false
 	linear_damp = 1.0
 	angular_damp = 4.0
+	target_update_timer.timeout.connect(_acquire_target)
+	center_of_mass_mode = CENTER_OF_MASS_MODE_CUSTOM
+	center_of_mass = Vector3(0, -0.25, -2.0)
 
 func _physics_process(delta):
 	if spin_progress < 1.0:
@@ -81,8 +88,8 @@ func _physics_process(delta):
 	if not can_fly:
 		return
 
-	_acquire_target()
 	if current_target == null:
+		_patrol_mode(delta)
 		return
 
 	if not strafing:
@@ -138,25 +145,42 @@ func _start_strafe():
 	current_max_speed = max_speed + randf_range(-speed_variation, speed_variation)
 	current_target_height = target_height + randf_range(-height_variation, height_variation)
 
-
 func _is_facing_target() -> bool:
 	var to_target = (current_target.global_transform.origin - global_transform.origin).normalized()
 	var forward = -transform.basis.z.normalized()
 	var dot = forward.dot(to_target)
-	return dot > 0.9  # Fire only if mostly facing target
+	return dot > 0.9
 
 func _acquire_target():
-	if current_target and is_instance_valid(current_target):
-		return
-
+	var space_state = get_world_3d().direct_space_state
 	var closest_dist = INF
+	var closest: Node3D = null
+
 	for node in get_tree().get_nodes_in_group("players"):
-		if not node is Node3D:
+		if not node or not node is Node3D:
 			continue
-		var dist = global_transform.origin.distance_to(node.global_transform.origin)
+
+		var from_pos = global_transform.origin
+		var to_pos = node.global_transform.origin
+
+		var ray_params = PhysicsRayQueryParameters3D.create(from_pos, to_pos)
+		ray_params.exclude = [self]
+		ray_params.collision_mask = 0b111110  # Change to match map obstacles only
+
+		var result = space_state.intersect_ray(ray_params)
+
+		# If something blocks the ray and it's not the player, skip
+		if result and result.collider != null and result.collider != node:
+			continue
+
+		var dist = from_pos.distance_to(to_pos)
 		if dist < closest_dist:
 			closest_dist = dist
-			current_target = node
+			closest = node
+
+	current_target = closest
+
+
 
 func _fire_burst():
 	if not turret or not current_target or not tracer_scene:
@@ -167,6 +191,10 @@ func _fire_burst():
 		get_parent().add_child(tracer)
 
 		var spawn_pos = turret.global_transform.origin
+
+		if current_target == null:
+			return
+
 		var target_pos = current_target.global_transform.origin
 
 		if randf() < miss_chance:
@@ -188,3 +216,45 @@ func _fire_burst():
 			tracer.velocity = velocity
 		elif tracer is RigidBody3D:
 			tracer.linear_velocity = velocity
+
+func _patrol_mode(delta):
+	# Circle around patrol center
+	patrol_angle += delta * 0.25  # control patrol speed
+	if patrol_angle > TAU:
+		patrol_angle -= TAU
+
+	var target_pos = patrol_center + Vector3(
+		sin(patrol_angle) * patrol_radius,
+		0,
+		cos(patrol_angle) * patrol_radius
+	)
+
+	var to_target = target_pos - global_transform.origin
+	to_target.y = 0
+	var flat_dir = to_target.normalized()
+	var target_yaw = atan2(-flat_dir.x, -flat_dir.z)
+	var angle_diff = wrapf(target_yaw - rotation.y, -PI, PI)
+	rotation.y += clamp(angle_diff, -turn_speed * delta, turn_speed * delta)
+
+	# Wiggle while patrolling
+	wiggle_timer += delta * wiggle_speed
+	var wiggle_offset = sin(wiggle_timer) * wiggle_amplitude
+	var wiggle_force = transform.basis.x * wiggle_offset
+	apply_central_force(wiggle_force)
+
+	# Move forward in current facing direction
+	var desired_velocity = -transform.basis.z * forward_accel
+	linear_velocity = linear_velocity.lerp(desired_velocity, delta * 2.0)
+
+	if linear_velocity.length() > max_speed:
+		linear_velocity = linear_velocity.normalized() * max_speed
+
+	# Maintain height
+	var height_error = target_height - global_transform.origin.y
+	var lift_adjust = clamp(height_error, -1, 5) * lift_force
+	apply_central_force(Vector3.UP * lift_adjust)
+
+	# Pitch stabilization
+	var pitch = transform.basis.get_euler().x
+	var pitch_damping = -pitch * 0.8
+	apply_torque(transform.basis.x * pitch_damping)
