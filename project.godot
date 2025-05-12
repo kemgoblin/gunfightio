@@ -36,6 +36,7 @@ window/quality/msaa_3d=3
 
 body_weapon_mesh="All weapon meshes."
 players=""
+terrian=""
 
 [input]
 

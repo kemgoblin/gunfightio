@@ -749,7 +749,7 @@ func die(_func_stage := 0, enemy_source_path := ""):
 			if dead:
 				return
 			dead = true
-			
+
 			# Play death animation
 			var anim_name = ""
 			match current_weapon.weapon_type:
@@ -757,34 +757,34 @@ func die(_func_stage := 0, enemy_source_path := ""):
 				Weapon.WEAPON_TYPES.PISTOL: anim_name = "Death"
 			play_oneshot_anim_body(anim_name)
 			$die_anim.play("die")
-			
-			# Corrected collision layers/masks:
-			collision_layer = 0  # Player is removed from all collision layers (cannot be hit)
-			collision_mask = 2   # Player still collides with terrain (Layer 2) ONLY
-			
-			var enemy_source := get_node(enemy_source_path)
-			if enemy_source is Player: 
-				enemy_source.score_point(1)
-			
-			enemy_that_killed = enemy_source
-			
+
+			# Disable player collision temporarily
+			collision_layer = 0
+			collision_mask = 2  # Only terrain
+
+			# Identify the killer
+			var enemy_source := get_node_or_null(enemy_source_path)
+			if enemy_source is Player:
+				enemy_that_killed = enemy_source
+				enemy_source.score_point(1)  # Reward the killer
+			else:
+				enemy_that_killed = null
+				score_point(-1)  # Only subtract a point if not killed by a Player
+
 		1:
-			# After animation ends, respawn logic
 			die(2)
 
-		2: 
-			# Respawn player
+		2:
+			# Respawn
 			health = max_health
 			hud.hp_target = max_health
 			Game.world.respawn(self)
 			dead = false
-
-			# Reset collision to original values after respawn
-			collision_layer = 1  # Player layer
-			collision_mask = 2 | 3  # Collide with terrain and bullets again
-			
+			collision_layer = 1  # Player
+			collision_mask = 2 | 3  # Terrain + bullets
 			enemy_that_killed = null
 			$die_anim.play("RESET")
+
 
 func _on_death_anim_done(anim:StringName, _func_stage):
 	if not "Death" in anim: return
