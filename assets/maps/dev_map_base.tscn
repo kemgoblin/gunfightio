@@ -1,10 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://b8676rdh1t64"]
+[gd_scene load_steps=24 format=3 uid="uid://b8676rdh1t64"]
 
 [ext_resource type="Script" uid="uid://b2he6uqo14ibj" path="res://scripts/class-map.gd" id="1_skyrd"]
 [ext_resource type="Texture2D" uid="uid://b1ohrdsk1tw3g" path="res://addons/MrMinimal'sVFX/addons/kenney-particles/textures/circle_05.png" id="3_2qupy"]
 [ext_resource type="PackedScene" uid="uid://hbws6ycj12md" path="res://assets/rigs/player_spawn.tscn" id="3_67016"]
 [ext_resource type="Shader" uid="uid://pw6sbjkjlalt" path="res://assets/pfx/fakegodray.gdshader" id="4_3v2t2"]
 [ext_resource type="PackedScene" uid="uid://bjatgc6s4kdru" path="res://core/vehicles/apache.tscn" id="5_6w4i4"]
+[ext_resource type="Script" uid="uid://dcjj66o03ke6g" path="res://scripts/__PFXManager.gd" id="6_f8fcu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3elrv"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -49,7 +50,7 @@ initial_velocity_max = 0.1
 gravity = Vector3(0, 0, 0)
 collision_use_scale = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vlsnx"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f8fcu"]
 transparency = 1
 blend_mode = 1
 shading_mode = 0
@@ -58,7 +59,7 @@ albedo_texture = ExtResource("3_2qupy")
 disable_receive_shadows = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_e3qlj"]
-material = SubResource("StandardMaterial3D_vlsnx")
+material = SubResource("StandardMaterial3D_f8fcu")
 size = Vector2(0.05, 0.05)
 
 [sub_resource type="Gradient" id="Gradient_lutr5"]
@@ -205,3 +206,6 @@ skeleton = NodePath("")
 [node name="Apache" parent="." instance=ExtResource("5_6w4i4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.67513, 67.9243, 444.067)
 max_tilt_angle = -0.2
+
+[node name="ParticleCache" type="Node3D" parent="."]
+script = ExtResource("6_f8fcu")

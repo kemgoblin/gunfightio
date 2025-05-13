@@ -1,26 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://ctqrwrw5byilx"]
+[gd_scene load_steps=5 format=3 uid="uid://ctqrwrw5byilx"]
 
 [ext_resource type="Texture2D" uid="uid://clhbx0gvncq2y" path="res://addons/MrMinimal'sVFX/addons/kenney-particles/textures/trace_01.png" id="1_d6khe"]
-
-[sub_resource type="Curve" id="Curve_icuf3"]
-_data = [Vector2(0, 0.191199), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_dlna4"]
-curve = SubResource("Curve_icuf3")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dnugg"]
-velocity_pivot = Vector3(1, 0, 0)
-spread = 117.644
-initial_velocity_min = 4.5
-initial_velocity_max = 5.1
-scale_min = 0.8
-scale_max = 1.3
-scale_over_velocity_curve = SubResource("CurveTexture_dlna4")
-collision_mode = 1
-collision_friction = 0.2
-collision_bounce = 0.38
-collision_use_scale = true
+[ext_resource type="Material" uid="uid://d1nov2aid5764" path="res://addons/MrMinimal'sVFX/game/entities/vfx/sparks_metal/sparks_metal.tres" id="1_do0h3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ylrsi"]
 transparency = 1
@@ -50,5 +31,5 @@ explosiveness = 1.0
 randomness = 1.0
 fixed_fps = 60
 transform_align = 3
-process_material = SubResource("ParticleProcessMaterial_dnugg")
+process_material = ExtResource("1_do0h3")
 draw_pass_1 = SubResource("QuadMesh_0u0tx")
