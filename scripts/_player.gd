@@ -71,6 +71,7 @@ var speed := 0.0
 var sprinting := false
 var stamina := 0
 var stamina_drained = false
+var animation_inputs: Dictionary[String, bool]
 
 
 ## JUMPING ##
@@ -149,6 +150,16 @@ func _ready() -> void:
 		ammo[side_weapon.name] = side_weapon.max_ammo * ammo_default_multiplier
 		side_weapon.current_ammo = side_weapon.max_ammo
 	switch_weapon(true)
+	
+	# Initialise animation inputs
+	animation_inputs = {
+		"walk_fw": false,
+		"walk_bk": false,
+		"walk_lf": false,
+		"walk_rt": false,
+		"sprint": false,
+		"jump": false,
+	}
 	
 	# Misc.
 	health = max_health
@@ -416,27 +427,28 @@ func _anim_body_process(player_id):
 			weapon_prefix = "Rifle"
 
 	# Map player inputs to animations
-	var inputs = {
-		"walk_fw": Input.is_action_pressed("p%d_walk_fw" % player_id),
-		"walk_bk": Input.is_action_pressed("p%d_walk_bk" % player_id),
-		"walk_lf": Input.is_action_pressed("p%d_walk_lf" % player_id),
-		"walk_rt": Input.is_action_pressed("p%d_walk_rt" % player_id),
-		"sprint": Input.is_action_pressed("p%d_sprint" % player_id),
-		"jump": Input.is_action_pressed("p%d_jump" % player_id)
-	}
+	if is_multiplayer_authority():
+		animation_inputs = {
+			"walk_fw": Input.is_action_pressed("p%d_walk_fw" % player_id),
+			"walk_bk": Input.is_action_pressed("p%d_walk_bk" % player_id),
+			"walk_lf": Input.is_action_pressed("p%d_walk_lf" % player_id),
+			"walk_rt": Input.is_action_pressed("p%d_walk_rt" % player_id),
+			"sprint": Input.is_action_pressed("p%d_sprint" % player_id),
+			"jump": Input.is_action_pressed("p%d_jump" % player_id)
+		}
 
 	# Handle jump
-	if inputs["jump"] and not is_on_floor():
+	if animation_inputs["jump"] and not is_on_floor():
 		anim_to_play = "Jump"
 	else:
 		# Movement logic
-		if inputs["walk_fw"]:
-			anim_to_play = "Sprint" if inputs["sprint"] else "MoveForward"
-		elif inputs["walk_bk"]:
+		if animation_inputs["walk_fw"]:
+			anim_to_play = "Sprint" if animation_inputs["sprint"] else "MoveForward"
+		elif animation_inputs["walk_bk"]:
 			anim_to_play = "MoveBack"
-		elif inputs["walk_lf"]:
+		elif animation_inputs["walk_lf"]:
 			anim_to_play = "MoveLeft"
-		elif inputs["walk_rt"]:
+		elif animation_inputs["walk_rt"]:
 			anim_to_play = "MoveRight"
 		else:
 			anim_to_play = "Idle"
